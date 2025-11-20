@@ -68,16 +68,13 @@ app.post('/convert', async (req, res) => {
     });
 
   } catch (error) {
-    if (browser) {
-      await browser.close();
-    }
-    console.error('Conversion error:', error);
-    res.status(500).json({ 
-      error: 'Failed to convert HTML to image',
-      details: error.message 
-    });
-  }
-});
+  if (browser) await browser.close();
+  console.error('Conversion error:', error);
+  res.status(500).json({
+    error: 'Failed to convert HTML to image',
+    details: error.stack || error.message
+  });
+}
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
