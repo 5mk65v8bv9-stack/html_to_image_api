@@ -1,5 +1,5 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -22,6 +22,7 @@ app.post('/convert', async (req, res) => {
   try {
     browser = await puppeteer.launch({
       headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, // <-- CRUCIAL
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -42,13 +43,13 @@ app.post('/convert', async (req, res) => {
       deviceScaleFactor: 1
     });
 
-    // Set the HTML content
+    // Load the HTML
     await page.setContent(html, {
       waitUntil: ['load', 'networkidle0'],
       timeout: 30000
     });
 
-    // Wait a bit for fonts to load
+    // Wait for fonts to finish loading
     await page.evaluate(() => document.fonts.ready);
     
     // Take screenshot
