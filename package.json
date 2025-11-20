@@ -1,14 +1,14 @@
 {
   "name": "html-to-image-api",
   "version": "1.0.0",
-  "description": "Convert HTML to PNG images using Puppeteer",
+  "description": "Convert HTML to PNG images using Puppeteer Core",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer": "^21.6.1"
+    "puppeteer-core": "^21.6.1"
   },
   "engines": {
     "node": ">=18.0.0"
