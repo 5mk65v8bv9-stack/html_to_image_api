@@ -22,7 +22,7 @@ app.post('/convert', async (req, res) => {
   try {
     browser = await puppeteer.launch({
       headless: 'new',
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, // <-- CRUCIAL
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, 
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -36,23 +36,23 @@ app.post('/convert', async (req, res) => {
 
     const page = await browser.newPage();
     
-    // Set viewport to match graphic dimensions
+    // Set viewport
     await page.setViewport({
       width: parseInt(width),
       height: parseInt(height),
       deviceScaleFactor: 1
     });
 
-    // Load the HTML
+    // Load HTML
     await page.setContent(html, {
       waitUntil: ['load', 'networkidle0'],
       timeout: 30000
     });
 
-    // Wait for fonts to finish loading
+    // Wait for fonts
     await page.evaluate(() => document.fonts.ready);
     
-    // Take screenshot
+    // Screenshot
     const screenshot = await page.screenshot({
       type: 'png',
       fullPage: false,
@@ -68,13 +68,15 @@ app.post('/convert', async (req, res) => {
     });
 
   } catch (error) {
-  if (browser) await browser.close();
-  console.error('Conversion error:', error);
-  res.status(500).json({
-    error: 'Failed to convert HTML to image',
-    details: error.stack || error.message
-  });
-}
+    if (browser) await browser.close();
+    console.error('Conversion error:', error);
+    res.status(500).json({
+      error: 'Failed to convert HTML to image',
+      details: error.stack || error.message
+    });
+  }
+
+}); // <-- THESE were missing
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
